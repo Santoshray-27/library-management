@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url("https://i.pinimg.com/564x/13/2e/57/132e57dbe343dbb90375b00aa6eed03f.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.heading {
+    text-align: center;
+    text-shadow: 8px 5px 12px rgb(83, 156, 99);
+    text-decoration: underline;
+    color: azure;
+}
+
+.card {
+    box-shadow: 10px 10px 10px rgba(83, 156, 99, 0.4);
+    border: 2px solid;
+}

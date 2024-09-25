@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer | Information</title>
+  <link rel="stylesheet" href="/Table.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+</head>
+
+<body class="d-flex flex-column justify-content-center align-items-center">
+  <h1 class="heading">Here All Customer Information !!</h1>
+
+  <table style="width:70%" class="table table-striped-columns table-responsive-md table-dark m-5">
+    <tr>
+      <th>Id :</th>
+      <th>Customer Name :</th>
+      <th>Customer Book Name :</th>
+      <th>Customer Phone :</th>
+      <th>Action :</th>
+    </tr>
+    <tr th:each="customer:${customers}">
+      <td th:text="${customer.cid}"></td>
+      <td th:text="${customer.cname}"></td>
+      <td th:text="${customer.cbook}"></td>
+      <td th:text="${customer.cphone}"></td>
+      <td>
+        <a th:href="@{/showFormForUpdate/{id}(id=${customer.cid})}" class="btn btn-primary">Update</a>
+        <a th:href="@{/deleteCustomer/{id}(id=${customer.cid})}" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+
+  </table>
+</body>
+
+</html>
