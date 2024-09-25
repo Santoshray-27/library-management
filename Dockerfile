@@ -1,5 +1,5 @@
 # Use a multi-stage build
-FROM maven:3.8.4-openjdk-21 as build
+FROM maven:3-eclipse-temurin-21 as build
 
 # Set the working directory
 WORKDIR /app
@@ -10,9 +10,6 @@ RUN mvn dependency:go-offline -B
 
 # Now copy the source files
 COPY src ./src
-
-# Check Java version to confirm JDK 21 is being used
-RUN java -version
 
 # Build the application
 RUN mvn package -DskipTests
