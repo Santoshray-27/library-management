@@ -1,14 +1,30 @@
-# Start with an official OpenJDK 21 base image
-FROM openjdk:21-jdk-slim
+# Use a multi-stage build
+FROM maven:3.8.4-openjdk-21 as build
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from your build into the container
-COPY target/your-app-name.jar /app/app.jar
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Expose the port your Spring Boot app runs on (default is 8080)
+# Now copy the source files
+COPY src ./src
+
+# Build the application
+RUN mvn package -DskipTests
+
+# Use a minimal base image containing only JRE
+FROM openjdk:21-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR file from the previous build stage
+COPY --from=build /app/target/*.jar /app/app.jar
+
+# Expose the port your app will run on
 EXPOSE 8080
 
-# Command to run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Run the JAR file
+CMD ["java", "-jar", "/app/app.jar"]
