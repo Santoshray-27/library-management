@@ -1,32 +1,33 @@
 # Use a multi-stage build
-FROM maven:3.8.4-openjdk-17 as build
+FROM maven:3.8.4-openjdk-21 as build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the pom.xml file
+# Copy the pom.xml and download dependencies
 COPY pom.xml .
-
-# Download all required dependencies into one layer
 RUN mvn dependency:go-offline -B
 
-# Copy your other files
+# Now copy the source files
 COPY src ./src
+
+# Check Java version to confirm JDK 21 is being used
+RUN java -version
 
 # Build the application
 RUN mvn package -DskipTests
 
-# Start with a base image containing Java runtime
-FROM openjdk:17-jdk-slim
+# Use a minimal base image containing only JRE
+FROM openjdk:21-jdk-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the jar file from the build stage
-COPY --from=build /app/target/*.jar app.jar
+# Copy the JAR file from the previous build stage
+COPY --from=build /app/target/*.jar /app/app.jar
 
-# Expose the port your app runs on
+# Expose the port your app will run on
 EXPOSE 8080
 
-# Run the jar file
-CMD ["java", "-jar", "app.jar"]
+# Run the JAR file
+CMD ["java", "-jar", "/app/app.jar"]
