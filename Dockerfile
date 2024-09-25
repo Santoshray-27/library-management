@@ -1,5 +1,5 @@
 # Use a multi-stage build
-FROM maven:3-eclipse-temurin-21 as build
+FROM maven:3.9.4-eclipse-temurin-21 as build
 
 # Set the working directory
 WORKDIR /app
