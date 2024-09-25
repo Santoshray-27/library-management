@@ -1,30 +1,32 @@
 # Use a multi-stage build
-FROM maven:3.9.4-eclipse-temurin-21 as build
+FROM maven:3.8.4-openjdk-17 as build
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the pom.xml and download dependencies
+# Copy the pom.xml file
 COPY pom.xml .
+
+# Download all required dependencies into one layer
 RUN mvn dependency:go-offline -B
 
-# Now copy the source files
+# Copy your other files
 COPY src ./src
 
 # Build the application
 RUN mvn package -DskipTests
 
-# Use a minimal base image containing only JRE
-FROM openjdk:21-jdk-slim
+# Start with a base image containing Java runtime
+FROM openjdk:17-jdk-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from the previous build stage
-COPY --from=build /app/target/*.jar /app/app.jar
+# Copy the jar file from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose the port your app will run on
+# Expose the port your app runs on
 EXPOSE 8080
 
-# Run the JAR file
-CMD ["java", "-jar", "/app/app.jar"]
+# Run the jar file
+CMD ["java", "-jar", "app.jar"]
